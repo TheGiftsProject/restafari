@@ -1,0 +1,25 @@
+require 'json'
+module Restafari
+  class Response
+    attr_reader :data, :resp
+
+    def initialize(resp)
+      @resp = resp
+      @data = JSON.parse(@resp.body)
+    end
+
+    def [](i)
+      case i
+        when Symbol
+          @data[i.to_s]
+        else
+          @data[i]
+      end
+    end
+
+    def method_missing(method_id, *args)
+      return super unless @data.key?(method_id.to_s)
+      self[method_id]
+    end
+  end
+end
