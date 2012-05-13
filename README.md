@@ -18,6 +18,15 @@ usage
   end
 ```
 
+Now, from your code, you simply do:
+
+```ruby
+  result = MyClass.sign_in
+
+  result[:success] == true #you can access the response body via hash-like
+  result.success == true #or as a method
+```
+
 You can also hook into the request and add your own filters(i.e for signing and other global params)
 
 ```ruby
