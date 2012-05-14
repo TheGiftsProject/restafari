@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {spec}/*`.split("\n")
-  s.require_paths = %w("lib")
+  s.require_paths = %w(lib)
 
   s.add_dependency "faraday"
 
