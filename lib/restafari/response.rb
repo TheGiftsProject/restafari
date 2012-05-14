@@ -5,7 +5,7 @@ module Restafari
 
     def initialize(resp)
       @resp = resp
-      @data = JSON.parse(@resp.body)
+      @data = @resp.is_a?(Hash) ? @resp[:body] : JSON.parse(@resp.body)
     end
 
     def [](i)
