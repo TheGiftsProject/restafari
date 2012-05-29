@@ -27,12 +27,27 @@ describe Restafari::Action do
       action :some_method
     end
 
-    Restafari.config.before_request do |params|
+    Restafari.config.before_request do |conn, params|
       params[:test] = true
     end
 
 
     Restafari.config.should_receive(:run_before_request_hook).once.and_return({test: true})
+    SomeAction.some_method()
+  end
+
+  it "should run the after response hook after each response" do
+    class SomeAction
+      include Restafari::Action
+      action :some_method
+    end
+
+    Restafari.config.after_response do |response|
+      "aaa"
+    end
+
+
+    Restafari.config.should_receive(:run_after_response_hook).once.and_return("aaa")
     SomeAction.some_method()
   end
 

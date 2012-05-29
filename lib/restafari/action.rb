@@ -31,9 +31,10 @@ module Restafari
 
       private
       def execute!(path, params)
-        params = Restafari.config.run_before_request_hook(params)
         conn = Faraday.new(url: Restafari.config.url)
+        Restafari.config.run_before_request_hook(conn, params)
         result = conn.send(Restafari.config.http_method, path, params)
+        Restafari.config.run_after_response_hook(result)
         Restafari::Response.new(result)
       end
     end

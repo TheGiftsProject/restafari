@@ -12,6 +12,7 @@ module Restafari
         http_method: :post,
         scheme: :http,
         before_request: nil,
+        after_response: nil
       }
 
       define_singleton_method :defaults do
@@ -38,8 +39,16 @@ module Restafari
       @before_request = block if block_given?
     end
 
+    def after_response(&block)
+      @after_response = block if block_given?
+    end
+
     def run_before_request_hook(*params)
-      @before_request.call(*params)
+      @before_request.call(*params) unless @after_response.nil?
+    end
+
+    def run_after_response_hook(*params)
+      @after_response.call(*params) unless @after_response.nil?
     end
 
   end
