@@ -11,8 +11,8 @@ module Restafari
         base_url: "",
         http_method: :post,
         scheme: :http,
-        before_request: nil,
-        after_response: nil
+        before_request: [],
+        after_response: []
       }
 
       define_singleton_method :defaults do
@@ -36,19 +36,23 @@ module Restafari
     end
 
     def before_request(&block)
-      @before_request = block if block_given?
+      @defaults[:before_request] << block if block_given?
     end
 
     def after_response(&block)
-      @after_response = block if block_given?
+      @defaults[:after_response] << block if block_given?
     end
 
     def run_before_request_hook(*params)
-      @before_request.call(*params) unless @after_response.nil?
+      @defaults[:before_request].each do |hook|
+        hook.call(*params)
+      end
     end
 
     def run_after_response_hook(*params)
-      @after_response.call(*params) unless @after_response.nil?
+      @defaults[:after_response].each do |hook|
+        hook.call(*params)
+      end
     end
 
   end
