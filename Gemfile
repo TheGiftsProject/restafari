@@ -4,8 +4,8 @@ source "http://rubygems.org"
 
 
 gem 'faraday'
-
 group :test do
+
   gem 'rake'
   gem 'rspec'
   gem 'webmock'

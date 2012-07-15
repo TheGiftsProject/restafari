@@ -12,7 +12,7 @@ end
 
 Restafari.config.base_url = "www.example.com"
 WebMock::stub_request(:post, "http://#{Restafari.config.base_url}/").to_return(:status => 200, :body => "{}", :headers => {})
-
+WebMock::stub_request(:post, "http://#{Restafari.config.base_url}/some_method").to_return(:status => 200, :body => "{}", :headers => {})
 unless defined?(RM_HOME)
   # this is here to allow teamcity to run with spork
   RM_HOME=File.expand_path("~/BuildAgent/plugins/rake-runner")

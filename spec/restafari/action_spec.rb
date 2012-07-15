@@ -7,7 +7,7 @@ describe Restafari::Action do
       action :some_method, { b: 1 }
     end
 
-    SomeAction.should_receive(:execute!).with(kind_of(String), { b: 1 }).once
+    SomeAction.should_receive(:execute!).with("/some_method", { b: 1 }).once
     SomeAction.some_method()
   end
 
@@ -27,7 +27,7 @@ describe Restafari::Action do
       action :some_method
     end
 
-    Restafari.config.before_request do |conn, params|
+    Restafari.config.before_request do |params|
       params[:test] = true
     end
 
@@ -49,6 +49,14 @@ describe Restafari::Action do
 
     Restafari.config.should_receive(:run_after_response_hook).once.and_return("aaa")
     SomeAction.some_method()
+  end
+
+  it "should allow accessing the action url" do
+    class UrlTest
+      include Restafari::Action
+      action :url_method
+    end
+    UrlTest.url_method_url(rt:2).to_s.should eq "http://www.example.com/url_method?rt=2"
   end
 
 end

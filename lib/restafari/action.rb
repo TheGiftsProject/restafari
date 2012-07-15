@@ -9,7 +9,10 @@ module Restafari
 
     module ClassMethods
       def action(name, *args)
+
         case args.length
+          when 0
+            path = "/#{name.to_s}"
           when 1
             if args[0].is_a? String
               path = args[0]
@@ -24,15 +27,24 @@ module Restafari
 
         default_params ||= {}
 
-        define_singleton_method(name) { |params={}|
-          execute!(path, default_params.merge(params))
-        }
+        define_singleton_method(name) do |params={}|
+          execute!(path, default_params.merge(params)) do |method, url, path, params|
+            send_using_faraday(method, url, path, params)
+          end
+        end
+
+        define_singleton_method("#{name}_url") do |params={}|
+          Restafari.config.run_before_request_hook(default_params.merge(params))
+          conn = Faraday.new(url: Restafari.config.url, params: params)
+          conn.build_url(path)
+        end
+
       end
 
       private
       def execute!(path, params)
         conn = Faraday.new(url: Restafari.config.url)
-        Restafari.config.run_before_request_hook(conn, params)
+        Restafari.config.run_before_request_hook(params)
         result = conn.send(Restafari.config.http_method, path, params)
         Restafari.config.run_after_response_hook(result)
         Restafari::Response.new(result)
