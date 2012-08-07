@@ -34,6 +34,8 @@ describe Restafari::Action do
 
     Restafari.config.should_receive(:run_before_request_hook).once.and_return({test: true})
     SomeAction.some_method()
+
+    Restafari.config.defaults[:before_request].clear
   end
 
   it "should run the after response hook after each response" do
