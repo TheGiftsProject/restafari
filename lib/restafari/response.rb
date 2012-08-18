@@ -20,6 +20,8 @@ module Restafari
     def method_missing(method_id, *args)
       return super unless @data.key?(method_id.to_s)
       self[method_id]
+    rescue NoMethodError=>ex
+      raise NoMethodError.new("no #{method_id} method, response: #{@resp}", "no method error")
     end
   end
 end
