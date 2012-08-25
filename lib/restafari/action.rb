@@ -27,8 +27,8 @@ module Restafari
 
         default_params ||= {}
 
-        define_singleton_method(name) do |params={}|
-          execute!(path, default_params.merge(params))
+        define_singleton_method(name) do |params={}, &block|
+          execute!(path, default_params.merge(params), &block)
         end
 
         define_singleton_method("#{name}_url") do |params={}|
@@ -41,11 +41,12 @@ module Restafari
       end
 
       private
-      def execute!(path, params)
+      def execute!(path, params, &block)
         conn = Faraday.new(url: Restafari.config.url)
         Restafari.config.run_before_request_hook(params)
         result = conn.send(Restafari.config.http_method, path, params) do |req|
           @req = req
+          yield req if block_given?
         end
         result.env[:req] = Hash[@req.each_pair.to_a]
         Restafari.config.run_after_response_hook(result)

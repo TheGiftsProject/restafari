@@ -61,4 +61,18 @@ describe Restafari::Action do
     UrlTest.url_method_url(rt:2).to_s.should eq "http://www.example.com/url_method?rt=2"
   end
 
+  it "should allow passing block to actions" do
+    class SomeAction
+      include Restafari::Action
+      action :some_method
+    end
+
+    SomeAction.some_method() do |req|
+      @req = req
+    end
+    @req.should be_kind_of(Faraday::Request)
+
+
+  end
+
 end
