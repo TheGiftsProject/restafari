@@ -79,7 +79,8 @@ describe Restafari::Action do
       action :some_method
     end
 
-    SomeAction.some_method(headers:{cookie:"aaa"}) do |req|
+    SomeAction.some_method(test:2, headers:{cookie:"aaa"}) do |req|
+
       @headers = req.headers
     end
     @headers[:cookie].should eq "aaa"

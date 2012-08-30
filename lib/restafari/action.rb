@@ -44,8 +44,10 @@ module Restafari
       def execute!(path, params, &block)
         conn = Faraday.new(url: Restafari.config.url)
         Restafari.config.run_before_request_hook(params)
+        headers = params[:headers] || {}
+        params.delete(:headers) #so we dont send it as part of the params
         result = conn.send(Restafari.config.http_method, path, params) do |req|
-          req.headers.update(params[:headers]) if params.has_key?(:headers)
+          req.headers.update(headers)
           @req = req
           yield req if block_given?
         end
