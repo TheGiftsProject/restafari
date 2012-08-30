@@ -71,8 +71,18 @@ describe Restafari::Action do
       @req = req
     end
     @req.should be_kind_of(Faraday::Request)
+  end
 
+  it "should allow passing headers to actions" do
+    class SomeAction
+      include Restafari::Action
+      action :some_method
+    end
 
+    SomeAction.some_method(headers:{cookie:"aaa"}) do |req|
+      @headers = req.headers
+    end
+    @headers[:cookie].should eq "aaa"
   end
 
 end
