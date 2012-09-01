@@ -86,4 +86,17 @@ describe Restafari::Action do
     @headers[:cookie].should eq "aaa"
   end
 
+  it "should not send nil headers" do
+    class SomeAction
+      include Restafari::Action
+      action :some_method
+    end
+
+    SomeAction.some_method(test: 2, headers: {cookie: nil}) do |req|
+
+      @headers = req.headers
+    end
+    @headers.has_key?(:cookie).should be false
+  end
+
 end
