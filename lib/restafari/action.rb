@@ -32,9 +32,10 @@ module Restafari
           execute!(path, default_params.merge(params), &block)
         end
 
-        define_singleton_method("#{name}_url") do |params={}, run_before_hooks=true|
+
+        define_singleton_method("#{name}_url") do |params={}, run_before_req_hooks=true|
           params = default_params.merge(params)
-          Restafari.config.run_before_request_hook(params) if run_before_hooks
+          Restafari.config.run_before_request_hook(params) if run_before_req_hooks
           conn = Faraday.new(url: Restafari.config.url, params: params)
           conn.build_url(path)
         end
