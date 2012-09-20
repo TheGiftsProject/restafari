@@ -98,18 +98,4 @@ describe Restafari::Action do
     end
     @headers.has_key?(:cookie).should be false
   end
-
-  it "should handle hash of cookies" do
-    class SomeAction
-      include Restafari::Action
-      action :some_method
-    end
-
-    SomeAction.some_method(test: 2, headers: {cookie: {d:"aa&g", c:"c"}}) do |req|
-      @headers = req.headers
-    end
-
-    @headers[:cookie].should eq "d=aa&g; c=c"
-  end
-
 end

@@ -1,5 +1,4 @@
 require "faraday"
-require 'uri'
 
 module Restafari
   module Action
@@ -47,10 +46,8 @@ module Restafari
         Restafari.config.run_before_request_hook(params)
 
         headers = params[:headers] || {}
-        headers.delete_if { |_, v| v.nil? }
+        headers.delete_if { |k, v| v.nil? }
         params.delete(:headers) #so we dont send it as part of the params
-
-        encode_cookie(headers)
 
         result = conn.send(Restafari.config.http_method, path, params) do |req|
           req.headers.update(headers)
@@ -60,14 +57,6 @@ module Restafari
         result.env[:req] = Hash[@req.each_pair.to_a]
         Restafari.config.run_after_response_hook(result)
         Restafari::Response.new(result)
-      end
-
-      def encode_cookie(headers)
-        return if headers.nil?
-        cookie = headers[:cookie]
-        if cookie
-          headers[:cookie] = headers[:cookie].map { |k, v| "#{k}=#{v}" }.join("; ")
-        end
       end
     end
   end
