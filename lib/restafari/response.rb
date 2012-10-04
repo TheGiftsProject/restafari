@@ -5,7 +5,20 @@ module Restafari
 
     def initialize(resp)
       @resp = resp
-      @data = @resp.is_a?(Hash) ? @resp[:body] : JSON.parse(@resp.body)
+
+      if @resp.is_a?(Hash)
+        @data = @resp[:body]
+      else
+        if @resp.is_a?(Faraday::Response)
+          begin
+            @data = JSON.parse(@resp.body)
+          rescue => e
+            @data = @resp.body
+          end
+        else
+          @data = nil
+        end
+      end
     end
 
     def [](i)
