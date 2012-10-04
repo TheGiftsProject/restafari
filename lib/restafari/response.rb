@@ -6,18 +6,16 @@ module Restafari
     def initialize(resp)
       @resp = resp
 
-      if @resp.is_a?(Hash)
+      if @resp.is_a?(Faraday::Response)
+        begin
+          @data = JSON.parse(@resp.body)
+        rescue => e
+          @data = @resp.body
+        end
+      elsif @resp.is_a?(Hash)
         @data = @resp[:body]
       else
-        if @resp.is_a?(Faraday::Response)
-          begin
-            @data = JSON.parse(@resp.body)
-          rescue => e
-            @data = @resp.body
-          end
-        else
-          @data = nil
-        end
+        @data = nil
       end
     end
 
