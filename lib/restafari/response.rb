@@ -1,11 +1,24 @@
 require 'json'
+require_relative 'invalid_response_error'
+
 module Restafari
   class Response
     attr_reader :data, :resp
 
     def initialize(resp)
       @resp = resp
-      @data = @resp.is_a?(Hash) ? @resp[:body] : JSON.parse(@resp.body)
+
+      if @resp.is_a?(Faraday::Response)
+        begin
+          @data = JSON.parse(@resp.body)
+        rescue => e
+          @data = @resp.body
+        end
+      elsif @resp.is_a?(Hash)
+        @data = @resp[:body]
+      else
+        raise InvalidResponseError.new(@resp)
+      end
     end
 
     def [](i)
