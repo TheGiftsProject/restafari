@@ -15,7 +15,7 @@ module Restafari
       elsif @resp.is_a?(Hash)
         @data = @resp[:body]
       else
-        @data = nil
+        raise StandardError.new(@resp)
       end
     end
 
