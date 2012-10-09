@@ -37,9 +37,11 @@ describe Restafari::Response do
     end
 
     context "when the response is nil" do
-      let(:response){ nil }
-      it "should be nil" do
-        new_response.should be_nil
+      let(:response){ "something went wrong" }
+      it "should raise an InvalidResponseError exception" do
+        expect{
+          Restafari::Response.new(response)
+        }.to raise_error( Restafari::InvalidResponseError, response)
       end
     end
 

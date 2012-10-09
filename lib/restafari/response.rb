@@ -1,4 +1,6 @@
 require 'json'
+require_relative 'invalid_response_error'
+
 module Restafari
   class Response
     attr_reader :data, :resp
@@ -15,7 +17,7 @@ module Restafari
       elsif @resp.is_a?(Hash)
         @data = @resp[:body]
       else
-        raise StandardError.new(@resp)
+        raise InvalidResponseError.new(@resp)
       end
     end
 
