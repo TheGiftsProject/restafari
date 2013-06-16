@@ -54,6 +54,7 @@ module Restafari
 
         result = conn.send(Restafari.config.http_method, path, params) do |req|
           req.headers.update(headers)
+          req.options[:timeout] = Restafari.config.timeout
           @req = req
           yield req if block_given?
         end
