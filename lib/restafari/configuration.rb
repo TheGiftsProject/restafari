@@ -11,6 +11,7 @@ module Restafari
         base_url: "",
         http_method: :post,
         scheme: :http,
+        timeout: 60,
         before_request: [],
         after_response: []
       }
